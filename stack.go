@@ -5,7 +5,6 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
-	"sync/atomic"
 )
 
 // Location はスタックの 1 フレームである。
@@ -74,8 +73,6 @@ const callersSkip = 4
 
 var doInitPCs []uintptr
 
-var callersCount atomic.Uint64
-
 func init() {
 	var buf [maxFrames]uintptr
 	n := runtime.Callers(0, buf[:])
@@ -95,7 +92,6 @@ func init() {
 
 //go:noinline
 func capture() []uintptr {
-	callersCount.Add(1)
 	var buf [maxFrames]uintptr
 	n := runtime.Callers(callersSkip, buf[:])
 	if n == 0 {
