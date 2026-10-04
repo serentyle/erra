@@ -1,8 +1,6 @@
-// Package erra は、比較できるコードと構造化属性と、起点で一度だけ記録するスタックを、標準の error の鎖に載せる。
+// Package erra は、比較できるコードと構造化属性と、起点で一度だけ記録するスタックを、標準の error のチェーンに載せる。
 //
 // コードがある失敗は [Code.New] と [Code.Wrap] で作る。コードがまだ無い失敗は [New] と [Wrap] で作る。境界では [CodeOf]、[AttrsOf]、[StackOf] で読む。
-//
-// このパッケージはログを出さない。HTTP ステータスも決めない。通常の失敗で panic しない。
 package erra
 
 import (
@@ -25,7 +23,7 @@ func (c Code) New(phrase string, attrs ...slog.Attr) error {
 
 // Wrap は err にコード c とフレーズと属性を足して返す。
 // err が nil なら nil を返す。c がゼロ値なら、この層は分類しない。
-// 原因の鎖に起点が無いときだけ、スタックを記録する。
+// 原因のチェーンに起点が無いときだけ、スタックを記録する。
 //
 //go:noinline
 func (c Code) Wrap(err error, phrase string, attrs ...slog.Attr) error {
@@ -45,7 +43,7 @@ func New(phrase string, attrs ...slog.Attr) error {
 
 // Wrap は err にフレーズと属性を足して返す。コードは変えない。
 // err が nil なら nil を返す。
-// 原因の鎖に起点が無いときだけ、スタックを記録する。
+// 原因のチェーンに起点が無いときだけ、スタックを記録する。
 //
 //go:noinline
 func Wrap(err error, phrase string, attrs ...slog.Attr) error {
